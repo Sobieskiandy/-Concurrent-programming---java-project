@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="CENTER" prefHeight="320.0" prefWidth="900.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pw_projekt_gui.SettingsController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <Button id="RandomButton" fx:id="RandomBtn" onAction="#onRandomButtonClick" text="Losuj parametry" />
+         <Button onAction="#onDefaultButtonClick" text="Przywróć domyślne" />
+      </children>
+   </HBox>
+   <HBox prefHeight="64.0" prefWidth="1240.0" VBox.vgrow="ALWAYS">
+      <children>
+         <VBox prefHeight="103.0" prefWidth="146.0">
+            <children>
+               <HBox prefHeight="7.0" prefWidth="146.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość zasobów: " />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                  </children>
+               </HBox>
+               <Slider max="10.0" min="1.0" value="2.0" />
+            </children>
+         </VBox>
+         <VBox prefHeight="48.0" prefWidth="176.0">
+            <children>
+               <HBox prefHeight="16.0" prefWidth="153.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość magazynów na zasoby: " />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                  </children>
+               </HBox>
+               <Slider max="10.0" min="1.0" prefHeight="14.0" prefWidth="167.0" value="2.0" />
+            </children>
+         </VBox>
+         <VBox prefHeight="48.0" prefWidth="184.0">
+            <children>
+               <HBox prefHeight="11.0" prefWidth="153.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość magazynów na zasoby: " />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                  </children>
+               </HBox>
+               <Slider max="10.0" min="1.0" value="2.0" />
+            </children>
+         </VBox>
+         <VBox prefHeight="48.0" prefWidth="192.0">
+            <children>
+               <HBox prefHeight="6.0" prefWidth="165.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość magazynów na zasoby: " />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                  </children>
+               </HBox>
+               <Slider max="3.0" min="1.0" value="1.0" />
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+            </children>
+         </VBox>
+         <VBox prefHeight="48.0" prefWidth="136.0">
+            <children>
+               <HBox prefHeight="6.0" prefWidth="165.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość magazynów wyjściowych: " />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                  </children>
+               </HBox>
+               <Slider max="3.0" min="1.0" value="1.0" />
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+            </children>
+         </VBox>
+      </children>
+   </HBox>
+   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Importuj ustawienia" />
+   <HBox prefHeight="290.0" prefWidth="1240.0">
+      <children>
+         <VBox prefHeight="94.0" prefWidth="113.0">
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Plik  xml" />
+               <Button mnemonicParsing="false" onAction="#onXMLButtonClick" text="Wycztaj plik xml" fx:id="xmlBtn" />
+            </children>
+         </VBox>
+         <VBox prefHeight="94.0" prefWidth="150.0">
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Plik  properties" />
+               <Button fx:id="propertiesBtn" mnemonicParsing="false" onAction="#onPropertiesButtonClick" text="Wycztaj plik properties" />
+            </children>
+         </VBox>
+         <VBox prefHeight="94.0" prefWidth="126.0">
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Plik  JSON" />
+               <Button fx:id="jsonBtn" mnemonicParsing="false" onAction="#onJSONButtonClick" text="Wczytaj plik JSON" />
+            </children>
+         </VBox>
+      </children>
+   </HBox>
+   <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <Button fx:id="SaveButton" onAction="#onSaveButtonClick" text="Zapisz zmiany">
+            <HBox.margin>
+               <Insets right="10.0" />
+            </HBox.margin>
+         </Button>
+         <Button fx:id="ExitButton" onAction="#onExitButtonClick" prefHeight="26.0" prefWidth="54.0" text="Wyjdź">
+            <HBox.margin>
+               <Insets left="10.0" />
+            </HBox.margin>
+         </Button>
+      </children>
+   </HBox>
+</VBox>
