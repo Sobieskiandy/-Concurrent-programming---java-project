@@ -40,7 +40,7 @@ public class MagazynWyjsciowy extends Magazyn{
             HelloApplication.iloscSamochodow.set(HelloApplication.iloscSamochodow.get() + 1);
             System.out.println("IloscSamochodowpO:"+HelloApplication.iloscSamochodow.get());
         }*/
-            Image image = new Image(getClass().getResource("/org/example/pw_projekt_gui/log/mw.png").toExternalForm());
+            Image image = new Image(getClass().getResource("/org/example/pw_projekt_gui/mw.png").toExternalForm());
 
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(100);
