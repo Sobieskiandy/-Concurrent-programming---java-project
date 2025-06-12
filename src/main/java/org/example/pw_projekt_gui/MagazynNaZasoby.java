@@ -3,52 +3,32 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import java.util.Random;
+import javafx.scene.Parent;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 public class MagazynNaZasoby extends Magazyn{
+    private Pane root;
     public String rzecz;
     public int poziomKrytyczny;
     private static volatile boolean[] chce = new boolean[2];
     private static volatile int czyjaKolej = 0;
     private final Random los = new Random();
-    private Pane root;
     int potrzeba=0;
     int x=100;
-    int y=100;
+    int y;
+    ImageView imageView;
+    Image image;
     private volatile boolean running = true;
     public MagazynNaZasoby(int id, String rzecz, int poziomKrytyczny, int ilosc, int pojemnosc, Pane root) {
         super(id, ilosc, pojemnosc);
         this.rzecz=rzecz;
         this.poziomKrytyczny = poziomKrytyczny;
-        this.root = root;
-        y=id*100+(id-1)*50;
-        /*if(id==1){//chcę by pierwszy magazyn od razu tworzył dwa samochody, jeden od "strafy A" do wielu MNZ oraz drugi od wielu MNZ do LP.
-            //System.out.println("IloscSamochodowPrzed:"+Main.iloscSamochodow.get());
-            Losuje.powiekszTablice(HelloApplication.listaSamochodow, HelloApplication.iloscSamochodow.get()+1);
-            for(int i=HelloApplication.iloscSamochodow.get();i<HelloApplication.iloscSamochodow.get()+1;i++)
-            {
-                HelloApplication.listaSamochodow.get().set(i,new Samochod((i+1),false,1,0,null,root,x,y+200,false));
-                //Powiększe tablicę listaSamochodowA
-                Losuje.powiekszTablice(HelloApplication.listaSamochodowA,1);
-                HelloApplication.listaSamochodowA.get().set(0,(i+1));
-            }
-            HelloApplication.iloscSamochodow.set(HelloApplication.iloscSamochodow.get()+1);
-            Losuje.powiekszTablice(HelloApplication.listaSamochodow, HelloApplication.iloscSamochodow.get()+1);
-            for(int i=HelloApplication.iloscSamochodow.get();i<HelloApplication.iloscSamochodow.get()+1;i++)
-            {
-                HelloApplication.listaSamochodow.get().set(i,new Samochod((i+1),false,2,0,null,root,x,y+100,true));
-                //Powiększe tablicę listaSamochodowB
-                Losuje.powiekszTablice(HelloApplication.listaSamochodowB,1);
-                HelloApplication.listaSamochodowB.get().set(0,(1));
-            }
-            HelloApplication.iloscSamochodow.set(HelloApplication.iloscSamochodow.get()+1);
-            //System.out.println("IloscSamochodowPo:"+Main.iloscSamochodow.get());
-        }*/
+        this.root=root;
+        y=(id*70+(id-1)*20)-50;
         String s = getClass().getResource("/org/example/pw_projekt_gui/mnz/" + rzecz).toExternalForm();
-
-        Image image = new Image(s);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(100);
+        image = new Image(s);
+        imageView = new ImageView(image);
+        imageView.setFitWidth(70);
         imageView.setPreserveRatio(true);
         root.getChildren().add(imageView);
         imageView.setLayoutX(x);imageView.setLayoutY(y);
@@ -146,7 +126,11 @@ public class MagazynNaZasoby extends Magazyn{
         }
         System.out.println("Koniec MNZ"+id+".");
     }
-    public void stop() {
+    public void stop(){
         running = false;
+    }
+    public void remove(){
+        root.getChildren().remove(imageView);
+        image=null;
     }
 }

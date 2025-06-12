@@ -23,7 +23,6 @@ import java.util.Properties;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class SettingsController {
@@ -31,8 +30,6 @@ public class SettingsController {
     File Fproperties;
     File Fjson;
     int c=0;//ostateczny wybór podczas zapisywania zmian. 0-brak,1-default,2-random,3-xml,4-properties,5-json
-    @FXML
-    private TextArea TAxml;
     @FXML
     protected void onDefaultButtonClick() {
         c=1;
@@ -48,7 +45,7 @@ public class SettingsController {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Pliki XML", "*.xml")
         );
-        Fxml = fileChooser.showOpenDialog(HelloApplication.settingsStage);
+        Fxml = fileChooser.showOpenDialog(HelloController.settingsStage);
     }
     @FXML
     public void onPropertiesButtonClick() {
@@ -57,7 +54,7 @@ public class SettingsController {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Pliki Properties", "*.properties")
         );
-        Fproperties = fileChooser.showOpenDialog(HelloApplication.settingsStage);
+        Fproperties = fileChooser.showOpenDialog(HelloController.settingsStage);
     }
     @FXML
     public void onJSONButtonClick() {
@@ -66,7 +63,7 @@ public class SettingsController {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Pliki JSON", "*.json")
         );
-        Fjson = fileChooser.showOpenDialog(HelloApplication.settingsStage);
+        Fjson = fileChooser.showOpenDialog(HelloController.settingsStage);
     }
     @FXML
     public void onSaveButtonClick() {
@@ -76,7 +73,7 @@ public class SettingsController {
             ImageView IVsa = sa.imageView;
             IVsa.setLayoutX(100*i); IVsa.setLayoutY(100*i);
         }*/
-            for (ExecutorService exec : HelloApplication.executors) {
+            for (ExecutorService exec : HelloController.executors) {
                 exec.shutdownNow();
                 try {
                     if (!exec.awaitTermination(1, TimeUnit.SECONDS)) {
@@ -88,15 +85,14 @@ public class SettingsController {
                 }
             }
         if(c==1){//domyślnie
-            new Losuje().domyslne(HelloApplication.iloscZasobow,HelloApplication.iloscLiniiProdukcyjnych,HelloApplication.iloscMagazynowNaZasoby,HelloApplication.listaZasobow,HelloApplication.listaMagazynowNaZasoby,HelloApplication.listaLiniiProdukcyjnych,(Pane)HelloApplication.root);
+            new Losuje().domyslne(HelloApplication.iloscZasobow,HelloApplication.iloscLiniiProdukcyjnych,HelloApplication.iloscMagazynowNaZasoby,HelloApplication.listaZasobow,HelloApplication.listaMagazynowNaZasoby,HelloApplication.listaLiniiProdukcyjnych,HelloApplication.root);
         }
         if(c==2){//losuje
-            new Losuje().losuj(HelloApplication.iloscZasobow, HelloApplication.iloscLiniiProdukcyjnych, HelloApplication.iloscMagazynowNaZasoby, HelloApplication.listaZasobow, HelloApplication.listaMagazynowNaZasoby, HelloApplication.listaLiniiProdukcyjnych, (Pane)HelloApplication.root);
+            new Losuje().losuj(HelloApplication.iloscZasobow, HelloApplication.iloscLiniiProdukcyjnych, HelloApplication.iloscMagazynowNaZasoby, HelloApplication.listaZasobow, HelloApplication.listaMagazynowNaZasoby, HelloApplication.listaLiniiProdukcyjnych,HelloApplication.root);
         }
         if(c==3){//xml poprzez DOM Parser
             if (Fxml != null) {
                 File xmlFile = new File(Fxml.getAbsolutePath());
-                //System.out.println(Fxml.getAbsolutePath());
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = null;
                 Document doc = null;
@@ -151,14 +147,14 @@ public class SettingsController {
         if(c==5){//json
             if (Fjson != null) {
                 ObjectMapper mapper = new ObjectMapper();
-                JsonNode root = null;
+                JsonNode root1 = null;
                 try {
-                    root = mapper.readTree(Fjson);
+                    root1 = mapper.readTree(Fjson);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
 
-                for (JsonNode osoba : root.get("osoby")) {
+                for (JsonNode osoba : root1.get("osoby")) {
                     String imie = osoba.get("imie").asText();
                     int wiek = osoba.get("wiek").asInt();
                     System.out.println(imie + " ma " + wiek + " lat.");
@@ -169,6 +165,7 @@ public class SettingsController {
     }
     @FXML
     public void onExitButtonClick() {
-        HelloApplication.settingsStage.close();
+        HelloController.settingsStage.close();
+        HelloController.st=false;
     }
 }

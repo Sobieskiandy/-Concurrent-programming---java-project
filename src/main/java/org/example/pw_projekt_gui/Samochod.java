@@ -21,26 +21,27 @@ public class Samochod implements Runnable{
     private int x;
     private int y;
     private boolean PL;
+    Image image;
     public ImageView imageView;
     private volatile boolean running = true;
-    public Samochod(int id, boolean pracuje, int obszar, /*int idNadawcy, int idAdresata,*/int ilosc, String zasob, Pane root,int x,int y, boolean PL){
+    public Samochod(int id, boolean pracuje, int obszar, int ilosc, String zasob, Pane root,int x,int y, boolean PL){
         String s=getClass().getResource("/org/example/pw_projekt_gui/samochod.jpg").toExternalForm();
-        Image image = new Image(s);
+        image = new Image(s);
         this.id = id;
         this.pracuje=pracuje;
         this.obszar=obszar;
         this.root=root;
-        //this.idNadawcy = idNadawcy;
-        //this.idAdresata = idAdresata;
         this.ilosc = ilosc;
         this.zasob = zasob;
+        this.x=y;
+        this.y=y;
         System.out.println("S"+id+" pracuje w obszarze "+obszar);
         this.imageView = new ImageView(image);
-        imageView.setFitWidth(70);
+        imageView.setFitWidth(50);
         imageView.setPreserveRatio(true);
         root.getChildren().add(imageView);
         imageView.setLayoutX(x);imageView.setLayoutY(y);
-        this.y=y;
+
         if(obszar==1||obszar==3){this.imageView.setRotationAxis(Rotate.Y_AXIS);this.imageView.setRotate(180);}
     }
     public void sekcja1(int ilos, String zasob, Samochod samochod,MagazynNaZasoby MNZ) {
@@ -151,7 +152,7 @@ public class Samochod implements Runnable{
             if(samochod.y>LP.y){int a=-(samochod.y-LP.y);samochod.y+=a;System.out.println("S3y:"+a);tt.setByY(a);}
             else if(samochod.y<LP.y){int a=LP.y-samochod.y;samochod.y+=a;System.out.println("S3y:"+a);tt.setByY(a);}
             else if(samochod.y==LP.y){tt.setByY(0);}
-            tt.setByX(-300);
+            tt.setByX(-220);
             tt.setDuration(Duration.seconds(1.5));
             //tt.setDelay(Duration.seconds(1));
             tt.setAutoReverse(true);
@@ -174,13 +175,13 @@ public class Samochod implements Runnable{
             if(samochod.y>MW.y){int a=-(samochod.y-MW.y);samochod.y+=a;System.out.println("S3y:"+a);tt.setByY(a);}
             else if(samochod.y<MW.y){int a=MW.y-samochod.y;samochod.y+=a;System.out.println("S3y:"+a);tt.setByY(a);}
             else if(samochod.y==MW.y){tt.setByY(0);}
-            tt.setByX(300);
+            tt.setByX(220);
             tt.setDuration(Duration.seconds(1.5));
             tt.setAutoReverse(true);
             tt.setCycleCount(1);
             LP.imageView2.setOpacity(0.5);
             tt.play();
-            Thread.sleep(1500);//los.nextInt(50)+100);//wraca z produktem
+            Thread.sleep(1500);//wraca z produktem
             Thread.sleep(1500);
             System.out.println("S"+id+" w obszarze "+obszar+" wracam z produktem od linii produkcyjnej "+LP.id+", mam go teraz "+ilosc);
             Thread.sleep(3000);//los.nextInt(50)+100);//rozładowuje produkt
@@ -252,5 +253,9 @@ public class Samochod implements Runnable{
     }
     public void stop() {
         running = false;
+    }
+    public void remove(){
+        root.getChildren().remove(imageView);
+        image=null;
     }
 }

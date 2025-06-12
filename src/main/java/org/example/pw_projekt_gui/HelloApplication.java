@@ -72,6 +72,7 @@ DONE
    - GUI
 TODO
  - klasa Losuje, linijka 80 i MW1, przy losowaniu dodaj metodę która zatrzyma poprzednie.
+ - Rozwiązać problem z plikami .gif
  */
 public class HelloApplication extends Application {
     //metoda dostarczająca do MNZ kiedy zostanie wywołana. Jest ona sekcją krytyczną symbolizująca dostęp do zasobu jakim jest samochód dostawczy który przewozi pewną zmienną ilość określonych zasobów w określonej ilości do określonego MNZ.
@@ -81,9 +82,7 @@ public class HelloApplication extends Application {
     public static AtomicInteger iloscMagazynowNaZasoby=new AtomicInteger(0);
     public static AtomicInteger iloscMagazynowWyjsciowych=new AtomicInteger(0);
     public static MagazynWyjsciowy MW1;
-    public static Parent root;
-    public static Parent settingsRoot;
-    public static Stage settingsStage;
+    public static AtomicReference<Pane> root = new AtomicReference<>();
     public static AtomicInteger iloscZasobow=new AtomicInteger(0);
     public static AtomicInteger iloscLiniiProdukcyjnych = new AtomicInteger(0);
     public static AtomicInteger iloscSamochodow = new AtomicInteger(0);
@@ -96,167 +95,21 @@ public class HelloApplication extends Application {
     public static AtomicReference<AtomicReferenceArray<MagazynNaZasoby>> listaMagazynowNaZasoby = new AtomicReference<>(new AtomicReferenceArray<>(iloscMagazynowNaZasoby.get()));//AtomicReferenceArray<MagazynNaZasoby> listaMagazynowNaZasoby=new AtomicReferenceArray<MagazynNaZasoby>(iloscMagazynowNaZasoby.get());//MagazynNaZasoby[] listaMagazynowNaZasoby=null;
     public static AtomicReference<AtomicReferenceArray<MagazynWyjsciowy>> listaMagazynowWyjsciowych = new AtomicReference<>(new AtomicReferenceArray<>(iloscMagazynowWyjsciowych.get()));
     public static AtomicReference<AtomicReferenceArray<LiniaProdukcyjna>> listaLiniiProdukcyjnych = new AtomicReference<>(new AtomicReferenceArray<>(iloscLiniiProdukcyjnych.get()));//Thread[] listaLiniiProdukcyjnych=null;
-    int s=0;
-    boolean st=false;//zmienna niepozwala na zamknięcie programu lub wejście do ustawień podczas działania symulacji
-    //public ExecutorService executor;
-    public static List<ExecutorService> executors = new ArrayList<>();
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        root = fxmlLoader.load();
-        //scena
-        Scene scene = new Scene(root, 320, 240);
+        Parent root = fxmlLoader.load();
+        HelloController controller = fxmlLoader.getController();
+        Pane pejnZFXML = controller.Pejn;
+
+        Scene scene = new Scene(root, 1080, 800);
         stage.setTitle("Zakład produkcyjny");
         stage.setScene(scene);
         stage.show();
-        Pane root = new Pane();
-        new Losuje().domyslne0(HelloApplication.iloscZasobow, HelloApplication.iloscLiniiProdukcyjnych, HelloApplication.iloscMagazynowNaZasoby, HelloApplication.iloscMagazynowWyjsciowych,HelloApplication.listaZasobow, HelloApplication.listaMagazynowNaZasoby, HelloApplication.listaLiniiProdukcyjnych, HelloApplication.listaMagazynowWyjsciowych, root);
-        Button StartBtn = new Button("Start");root.getChildren().add(StartBtn);
-        Button StopBtn = new Button("Stop");root.getChildren().add(StopBtn);
-        Button SettingsBtn = new Button("Ustawienia");root.getChildren().add(SettingsBtn);
-        Button ExitBtn = new Button("Wyjdź");root.getChildren().add(ExitBtn);
-        StartBtn.setLayoutX(0);StartBtn.setLayoutY(0);
-        StopBtn.setLayoutX(50);StopBtn.setLayoutY(0);
-        SettingsBtn.setLayoutX(100);SettingsBtn.setLayoutY(0);
-        ExitBtn.setLayoutX(175);ExitBtn.setLayoutY(0);
-        scene = new Scene(root, 1080, 520);
-        stage.setScene(scene);
-        stage.show();
-        StartBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            st=true;
-                if (executors.stream().anyMatch(exec -> !exec.isShutdown())) {
-                    return; // Już działa coś — nie uruchamiaj ponownie
-                }
-                // Linie Produkcyjne
-                ExecutorService ex1 = Executors.newFixedThreadPool(iloscLiniiProdukcyjnych.get());
-                executors.add(ex1);
-                AtomicReferenceArray<LiniaProdukcyjna> linie = HelloApplication.listaLiniiProdukcyjnych.get();
-                for (int i = 0; i < HelloApplication.iloscLiniiProdukcyjnych.get(); i++) {
-                    LiniaProdukcyjna lp = linie.get(i);
-                    ex1.submit(lp);
-                }
 
-                // Magazyny na zasoby
-                ExecutorService ex2 = Executors.newFixedThreadPool(iloscMagazynowNaZasoby.get());
-                executors.add(ex2);
-                AtomicReferenceArray<MagazynNaZasoby> linie1 = HelloApplication.listaMagazynowNaZasoby.get();
-                for (int i = 0; i < HelloApplication.iloscMagazynowNaZasoby.get(); i++) {
-                    MagazynNaZasoby mnz = linie1.get(i);
-                    ex2.submit(mnz);
-                }
-
-                // Magazyny wyjściowe
-                ExecutorService ex3 = Executors.newFixedThreadPool(iloscMagazynowWyjsciowych.get());
-                executors.add(ex3);
-                AtomicReferenceArray<MagazynWyjsciowy> linie2 = HelloApplication.listaMagazynowWyjsciowych.get();
-                for (int i = 0; i < HelloApplication.iloscMagazynowWyjsciowych.get(); i++) {
-                    MagazynWyjsciowy mw = linie2.get(i);
-                    ex3.submit(mw);
-                }
-
-                // Samochody
-                ExecutorService ex4 = Executors.newFixedThreadPool(iloscSamochodow.get());
-                executors.add(ex4);
-                AtomicReferenceArray<Samochod> linie3 = HelloApplication.listaSamochodow.get();
-                for (int i = 0; i < HelloApplication.iloscSamochodow.get(); i++) {
-                    Samochod s1 = linie3.get(i);
-                    ex4.submit(s1);
-                }
-                s++; // tylko jeden raz
-        });
-        StopBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            if(st==true){
-                // Zatrzymanie wszystkich obiektów
-                for (int i = 0; i < HelloApplication.iloscSamochodow.get(); i++) {
-                    Samochod sa = HelloApplication.listaSamochodow.get().get(i);
-                    if (sa != null) {
-                        sa.stop();
-                    }
-                }
-
-                for (int i = 0; i < HelloApplication.iloscLiniiProdukcyjnych.get(); i++) {
-                    LiniaProdukcyjna lp = HelloApplication.listaLiniiProdukcyjnych.get().get(i);
-                    if (lp != null) {
-                        lp.stop();
-                    }
-                }
-
-                for (int i = 0; i < HelloApplication.iloscMagazynowNaZasoby.get(); i++) {
-                    MagazynNaZasoby mnz = HelloApplication.listaMagazynowNaZasoby.get().get(i);
-                    if (mnz != null) {
-                        mnz.stop();
-                    }
-                }
-
-                for (int i = 0; i < HelloApplication.iloscMagazynowWyjsciowych.get(); i++) {
-                    MagazynWyjsciowy mw = HelloApplication.listaMagazynowWyjsciowych.get().get(i);
-                    if (mw != null) {
-                        mw.stop();
-                    }
-                }
-                /*
-                // Zamknięcie wszystkich executorów z listy
-                for (ExecutorService exec : executors) {
-                    exec.shutdownNow();
-                    try {
-                        if (!exec.awaitTermination(1, TimeUnit.SECONDS)) {
-                            System.out.println("Wątki nie zakończyły się na czas");
-                        }
-                    } catch (InterruptedException e) {
-                        exec.shutdownNow();
-                        Thread.currentThread().interrupt();
-                    }
-                }
-
-                // Można wyczyścić listę, jeśli chcesz uruchomić później jeszcze raz
-                executors.clear();*/
-                st=false;
-            }
-        });
-        SettingsBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            if(st==false)
-            {
-                FXMLLoader fxmlSettingsLoader = new FXMLLoader(HelloApplication.class.getResource("settings-view.fxml"));
-                try{
-                    settingsRoot = fxmlSettingsLoader.load();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Scene scene1 = new Scene(settingsRoot, 900, 320);
-                settingsStage = new Stage();
-                settingsStage.setTitle("Zakład produkcyjny");
-                settingsStage.setScene(scene1);
-                settingsStage.show();
-            }
-        });
-        ExitBtn.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            if(st==false)
-            {
-                // Zamknięcie wszystkich executorów z listy
-                for (ExecutorService exec : executors) {
-                    exec.shutdownNow();
-                    try {
-                        if (!exec.awaitTermination(1, TimeUnit.SECONDS)) {
-                            System.out.println("Wątki nie zakończyły się na czas");
-                        }
-                    } catch (InterruptedException e) {
-                        exec.shutdownNow();
-                        Thread.currentThread().interrupt();
-                    }
-                }
-                // Można wyczyścić listę, jeśli chcesz uruchomić później jeszcze raz
-                executors.clear();
-                for (ExecutorService exec : executors) {
-                    exec.shutdownNow();
-                    try {
-                        exec.awaitTermination(5, TimeUnit.SECONDS);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Platform.exit();
-            }
-        });
+        HelloApplication.root.set(pejnZFXML);
+        new Losuje().domyslne0(HelloApplication.iloscZasobow, HelloApplication.iloscLiniiProdukcyjnych, HelloApplication.iloscMagazynowNaZasoby, HelloApplication.iloscMagazynowWyjsciowych,HelloApplication.listaZasobow, HelloApplication.listaMagazynowNaZasoby, HelloApplication.listaLiniiProdukcyjnych, HelloApplication.listaMagazynowWyjsciowych, HelloApplication.root);
     }
     public static void main(String[] args)
     {
