@@ -21,8 +21,10 @@ public class MagazynWyjsciowy extends Magazyn{
     private static volatile boolean[] chce = new boolean[2];
     private static volatile int czyjaKolej = 0; //ustala kolejność
     private final Random los = new Random();
-    int x=900;
-    int y=250;
+    int x=800;
+    int y=150;
+    public Image image;
+    public ImageView imageView;
     private volatile boolean running = true;
     public MagazynWyjsciowy(int id, int iloscProduktow, int iloscPakietow, int iloscNaPakiet, int pojemnosc, Pane root){
         super(id, iloscProduktow, pojemnosc);
@@ -40,10 +42,10 @@ public class MagazynWyjsciowy extends Magazyn{
             HelloApplication.iloscSamochodow.set(HelloApplication.iloscSamochodow.get() + 1);
             System.out.println("IloscSamochodowpO:"+HelloApplication.iloscSamochodow.get());
         }*/
-            Image image = new Image(getClass().getResource("/org/example/pw_projekt_gui/log/mw.png").toExternalForm());
+            image = new Image(getClass().getResource("/org/example/pw_projekt_gui/mw.png").toExternalForm());
 
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(100);
+            imageView = new ImageView(image);
+            imageView.setFitWidth(70);
             imageView.setPreserveRatio(true);
             root.getChildren().add(imageView);
             imageView.setLayoutX(x);imageView.setLayoutY(y);
@@ -147,5 +149,9 @@ public class MagazynWyjsciowy extends Magazyn{
     }
     public void stop() {
         running = false;
+    }
+    public void remove(){
+        root.getChildren().remove(imageView);
+        image=null;
     }
 }

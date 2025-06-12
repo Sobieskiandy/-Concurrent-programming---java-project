@@ -12,15 +12,17 @@ public class LiniaProdukcyjna implements Runnable{
     private Pane root;
     int x=350;
     int y;
-    public ImageView imageView1;
-    public ImageView imageView2;
+    Image image;
+    ImageView imageView;
+    ImageView imageView1;
+    ImageView imageView2;
     LiniaProdukcyjna(int id, String zasob, boolean produkt, Pane root) {
         this.id = id;
         this.zasob = zasob;
         this.produkt=produkt;
         this.root = root;
         //System.out.println("Linia Produkcyjna id:"+id+" używa zasobu "+zasob);
-        y=id*100+(id-1)*50;
+        y=(id*70+(id-1)*20)-50;
         /*if(id==1){//chcę by pierwsza linia produkcyjna (LP) od razu tworzyła samochód,jeżdżący od LP do magazynu wyjściowego (MW)
             //System.out.println("IloscSamochodowPRZED:"+Main.iloscSamochodow.get());
             Losuje.powiekszTablice(HelloApplication.listaSamochodow, HelloApplication.iloscSamochodow.get()+1);
@@ -35,38 +37,29 @@ public class LiniaProdukcyjna implements Runnable{
             HelloApplication.iloscSamochodow.set(HelloApplication.iloscSamochodow.get()+1);
             //System.out.println("IloscSamochodowPO:"+Main.iloscSamochodow.get());
         }*/
-        Image image = new Image(getClass().getResource("/org/example/pw_projekt_gui/lp.jpg").toExternalForm());
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(300);
+        image = new Image(getClass().getResource("/org/example/pw_projekt_gui/lp.jpg").toExternalForm());
+        imageView = new ImageView(image);
+        imageView.setFitWidth(250);
         imageView.setPreserveRatio(true);
         root.getChildren().add(imageView);
         imageView.setLayoutX(x);imageView.setLayoutY(y);
         Image image1 = new Image(getClass().getResource("/org/example/pw_projekt_gui/log/" + zasob).toExternalForm());
         imageView1 = new ImageView(image1);
-        imageView1.setFitWidth(50);
+        imageView1.setFitWidth(40);
         imageView1.setPreserveRatio(true);
         imageView1.setOpacity(0.5);
         root.getChildren().add(imageView1);
-        imageView1.setLayoutX(x-20);imageView1.setLayoutY(y-55);
+        imageView1.setLayoutX(x-20);imageView1.setLayoutY(y-35);
         Image image2 = new Image(getClass().getResource("/org/example/pw_projekt_gui/door/" + zasob).toExternalForm());
         imageView2 = new ImageView(image2);
-        imageView2.setFitWidth(50);
+        imageView2.setFitWidth(40);
         imageView2.setPreserveRatio(true);
         imageView2.setOpacity(0.5);
         root.getChildren().add(imageView2);
-        imageView2.setLayoutX(x+285);imageView2.setLayoutY(y-75);
+        imageView2.setLayoutX(x+245);imageView2.setLayoutY(y-55);
     }
     @Override
     public void run(){
-        /*while (running) {
-            // praca w tle
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // bardzo ważne
-                break;
-            }
-        }*/
         while(running){//!Thread.currentThread().isInterrupted()){
             if(!pracuje&&!produkt){
                 // UWAGA ! TUTAJ JEST BŁĄD KTÓRY POWODUJE BRAK KOŃCA WĄTKÓW
@@ -139,5 +132,11 @@ public class LiniaProdukcyjna implements Runnable{
     }
     public void stop() {
         running = false;
+    }
+    public void remove(){
+        root.getChildren().remove(imageView);
+        root.getChildren().remove(imageView1);
+        root.getChildren().remove(imageView2);
+        image=null;
     }
 }
