@@ -1,4 +1,8 @@
 package org.example.pw_projekt_gui;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.Modality;
 import javafx.fxml.FXML;
@@ -13,23 +17,33 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.FileInputStream;
 import java.util.Properties;
 import java.io.File;
+import java.net.URL;//sprawdza kiedy Slider zmieni wartość
+import javafx.scene.control.Slider;//Slider
+import javafx.scene.layout.HBox;//dodaje HBox
+import javafx.scene.control.ComboBox;//dodaje ComboBox
+import java.util.List;//dodaje listę
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReferenceArray;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
-public class SettingsController {
+public class SettingsController implements Initializable {
     File Fxml;
     File Fproperties;
     File Fjson;
     int c=0;//ostateczny wybór podczas zapisywania zmian. 0-brak,1-default,2-random,3-xml,4-properties,5-json
+    int ZOut;
+    int MOut;
+    int LOut;
+    int sOut;
     @FXML
     protected void onDefaultButtonClick() {
         c=1;
@@ -38,6 +52,33 @@ public class SettingsController {
     public void onRandomButtonClick(){
         c=2;
     }
+    @FXML
+    private Text ZasobyOut;
+    @FXML
+    private Slider ZasobySlider;
+    private List<HBox> zasobyLista = new ArrayList<>();
+    @FXML private HBox Z1; @FXML private HBox Z2; @FXML private HBox Z3; @FXML private HBox Z4; @FXML private HBox Z5; @FXML private HBox Z6;@FXML private HBox Z7; @FXML private HBox Z8;
+    @FXML private ChoiceBox<String> Z1CB; @FXML private ChoiceBox<String> Z2CB; @FXML private ChoiceBox<String> Z3CB; @FXML private ChoiceBox<String> Z4CB; @FXML private ChoiceBox<String> Z5CB; @FXML private ChoiceBox<String> Z6CB;@FXML private ChoiceBox<String> Z7CB; @FXML private ChoiceBox<String> Z8CB;
+    @FXML
+    private Text MNZOut;
+    @FXML
+    private Slider MNZSlider;
+    private List<HBox> MNZLista = new ArrayList<>();
+    private List<String> MNZZLista = new ArrayList<>();
+    @FXML private HBox M1; @FXML private HBox M2; @FXML private HBox M3; @FXML private HBox M4; @FXML private HBox M5; @FXML private HBox M6;@FXML private HBox M7; @FXML private HBox M8;
+    @FXML private ComboBox M1CB;
+    @FXML
+    private Text LPOut;
+    @FXML
+    private Slider LPSlider;
+    private List<HBox> LPLista = new ArrayList<>();
+    @FXML private HBox L1; @FXML private HBox L2; @FXML private HBox L3; @FXML private HBox L4; @FXML private HBox L5; @FXML private HBox L6;@FXML private HBox L7; @FXML private HBox L8;
+    @FXML
+    private Text SOut;
+    @FXML
+    private Slider SSlider;
+    private List<HBox> SLista = new ArrayList<>();
+    @FXML private HBox S1; @FXML private HBox S2; @FXML private HBox S3; @FXML private HBox S4; @FXML private HBox S5; @FXML private HBox S6;@FXML private HBox S7; @FXML private HBox S8; @FXML private HBox S9; @FXML private HBox S10; @FXML private HBox S11;
     @FXML
     public void onXMLButtonClick(){
         c=3;
@@ -367,5 +408,96 @@ public class SettingsController {
     public void onExitButtonClick() {
         HelloController.settingsStage.close();
         HelloController.st=false;
+    }
+    @Override
+    public void initialize(URL arg0, ResourceBundle arg1) {
+        zasobyLista.add(Z1);zasobyLista.add(Z2);zasobyLista.add(Z3);zasobyLista.add(Z4);
+        zasobyLista.add(Z5);zasobyLista.add(Z6);zasobyLista.add(Z7);zasobyLista.add(Z8);
+        MNZLista.add(M1);MNZLista.add(M2);MNZLista.add(M3);MNZLista.add(M4);
+        MNZLista.add(M5);MNZLista.add(M6);MNZLista.add(M7);MNZLista.add(M8);
+        LPLista.add(L1);LPLista.add(L2);LPLista.add(L3);LPLista.add(L4);
+        LPLista.add(L5);LPLista.add(L6);LPLista.add(L7);LPLista.add(L8);
+        SLista.add(S1);SLista.add(S2);SLista.add(S3);SLista.add(S4);SLista.add(S5);SLista.add(S6);
+        SLista.add(S7);SLista.add(S8);SLista.add(S9);SLista.add(S10);SLista.add(S11);
+        Z1CB.getItems().addAll(Losuje.NazwyZasobow);Z2CB.getItems().addAll(Losuje.NazwyZasobow);Z3CB.getItems().addAll(Losuje.NazwyZasobow);Z4CB.getItems().addAll(Losuje.NazwyZasobow);
+        Z5CB.getItems().addAll(Losuje.NazwyZasobow);Z6CB.getItems().addAll(Losuje.NazwyZasobow);Z7CB.getItems().addAll(Losuje.NazwyZasobow);Z8CB.getItems().addAll(Losuje.NazwyZasobow);
+
+        ZasobySlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                ZOut=(int)ZasobySlider.getValue();
+                ZasobyOut.setText(Integer.toString(ZOut));
+                for(int i=0;i<8;i++)
+                {
+                    zasobyLista.get(i).setOpacity(1);
+                    zasobyLista.get(i).setDisable(false);
+                }
+                for(int i=8;i>ZOut;i--)
+                {
+                    zasobyLista.get(i-1).setOpacity(0.5);
+                    zasobyLista.get(i-1).setDisable(true);
+                }
+            }
+        });
+        MNZSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                MOut=(int)MNZSlider.getValue();
+                MNZOut.setText(Integer.toString(MOut));
+                for(int i=0;i<8;i++)
+                {
+                    MNZLista.get(i).setOpacity(1);
+                    MNZLista.get(i).setDisable(false);
+                }
+                for(int i=8;i>MOut;i--)
+                {
+                    MNZLista.get(i-1).setOpacity(0.5);
+                    MNZLista.get(i-1).setDisable(true);
+                }
+            }
+        });
+        LPSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                LOut=(int)LPSlider.getValue();
+                LPOut.setText(Integer.toString(LOut));
+                for(int i=0;i<8;i++)
+                {
+                    LPLista.get(i).setOpacity(1);
+                    LPLista.get(i).setDisable(false);
+                }
+                for(int i=8;i>LOut;i--)
+                {
+                    LPLista.get(i-1).setOpacity(0.5);
+                    LPLista.get(i-1).setDisable(true);
+                }
+            }
+        });
+        SSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+                sOut=(int)SSlider.getValue();
+                SOut.setText(Integer.toString(sOut));
+                for(int i=0;i<11;i++)
+                {
+                    SLista.get(i).setOpacity(1);
+                    SLista.get(i).setDisable(false);
+                }
+                for(int i=11;i>sOut;i--)
+                {
+                    SLista.get(i-1).setOpacity(0.5);
+                    SLista.get(i-1).setDisable(true);
+                }
+            }
+        });
+
+        Z1CB.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                if(Z1CB.getValue()!=null){
+                    M1CB.getItems().add(Z1CB.getValue());
+                }
+            }
+        });
     }
 }

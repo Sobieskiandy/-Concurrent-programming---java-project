@@ -203,7 +203,7 @@ public class HelloController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            Scene scene1 = new Scene(settingsRoot, 900, 320);
+            Scene scene1 = new Scene(settingsRoot, 900, 550);
             settingsStage = new Stage();
             settingsStage.setTitle("Zakład produkcyjny");
             settingsStage.setScene(scene1);

@@ -31,6 +31,7 @@ public class MagazynWyjsciowy extends Magazyn{
         this.iloscNaPakiet=iloscNaPakiet;
         this.root = root;
             image = new Image(getClass().getResource("/org/example/pw_projekt_gui/mw.png").toExternalForm());
+
             imageView = new ImageView(image);
             imageView.setFitWidth(70);
             imageView.setPreserveRatio(true);

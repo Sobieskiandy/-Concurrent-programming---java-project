@@ -66,15 +66,11 @@ DONE
  - dodałem zmienne typu Atomic
  - poprawne przenoszenie długości tablicy oraz elementów listyliniiprodukcyjnych
  - dodanie współbieżności między obiektami(Alg. Peterson,semafory,semafory, Alg. Dekker)
-  - Wczytywanie z plików
-   - GUI
+ - Wczytywanie z plików
+ - GUI
 TODO
- - klasa Losuje, linijka 80 i MW1, przy losowaniu dodaj metodę która zatrzyma poprzednie.
  - Rozwiązać problem z plikami .gif
  - Poprawić błędy z blokowaniem przycisków
- - Dodanie liczb żywo zmieniających się nad magazynami i liniami produkcyjnymi
- - Poprawić działanie MW
- - Brak działania samochodu2 po wczytaniu z pliku(JSON)
  - Wymuszenie wywołania metody onExitButtonClick() również dla X na górze po prawej stonie ekranu
  */
 public class HelloApplication extends Application {
