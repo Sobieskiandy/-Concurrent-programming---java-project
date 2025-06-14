@@ -10,10 +10,10 @@ Język implementacji: Java
 Termin wykonania: ostatnie zajęcia
 Podstawowe wymagania:
 a. liczba procesów sekwencyjnych powinna być dobrana z wyczuciem tak, aby zachować czytelność interfejsu i
-jednocześnie umożliwić zobrazowanie reprezentatywnych przykładów, Done
+jednocześnie umożliwić zobrazowanie reprezentatywnych przykładów,
 b. kod źródłowy programu musi być tak skonstruowany, aby można było „swobodnie” modyfikować liczbę
 procesów sekwencyjnych (za wyjątkiem zadań o ściśle określonej liczbie procesów),
-c. graficzne zobrazowanie działania procesów współbieżnych, Robię
+c. graficzne zobrazowanie działania procesów współbieżnych,
 d. odczyt domyślnych danych wejściowych ze sformatowanego, tekstowego pliku danych (xml, properties, inne),
 e. możliwość modyfikacji danych wejściowych poprzez GUI.
 Sprawozdanie (w formie elektronicznej) powinno zawierać następujące elementy:
@@ -65,14 +65,17 @@ DONE
  - podstawa(obiekty, menu do testów)
  - dodałem zmienne typu Atomic
  - poprawne przenoszenie długości tablicy oraz elementów listyliniiprodukcyjnych
- - częściowe dodanie współbieżności między obiektami(Alg. Peterson,_,_, Alg. Dekker)
-  - idk czemu w Linii Produkcyjnej by dobrze zdefiniować samochód w sferze3 muszę dodać +1
-  współbieżność między obiektami
+ - dodanie współbieżności między obiektami(Alg. Peterson,semafory,semafory, Alg. Dekker)
   - Wczytywanie z plików
    - GUI
 TODO
  - klasa Losuje, linijka 80 i MW1, przy losowaniu dodaj metodę która zatrzyma poprzednie.
  - Rozwiązać problem z plikami .gif
+ - Poprawić błędy z blokowaniem przycisków
+ - Dodanie liczb żywo zmieniających się nad magazynami i liniami produkcyjnymi
+ - Poprawić działanie MW
+ - Brak działania samochodu2 po wczytaniu z pliku(JSON)
+ - Wymuszenie wywołania metody onExitButtonClick() również dla X na górze po prawej stonie ekranu
  */
 public class HelloApplication extends Application {
     //metoda dostarczająca do MNZ kiedy zostanie wywołana. Jest ona sekcją krytyczną symbolizująca dostęp do zasobu jakim jest samochód dostawczy który przewozi pewną zmienną ilość określonych zasobów w określonej ilości do określonego MNZ.
@@ -114,5 +117,9 @@ public class HelloApplication extends Application {
     public static void main(String[] args)
     {
         launch();
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            System.out.println("Tu błąd:");
+            throwable.printStackTrace(); // pokaże źródło problemu
+        });
     }
 }

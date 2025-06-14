@@ -9,8 +9,6 @@ import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
 import java.io.IOException;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,6 +21,8 @@ import java.util.Properties;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReferenceArray;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class SettingsController {
@@ -39,7 +39,7 @@ public class SettingsController {
         c=2;
     }
     @FXML
-    public void onXMLButtonClick() {
+    public void onXMLButtonClick(){
         c=3;
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
@@ -48,7 +48,7 @@ public class SettingsController {
         Fxml = fileChooser.showOpenDialog(HelloController.settingsStage);
     }
     @FXML
-    public void onPropertiesButtonClick() {
+    public void onPropertiesButtonClick(){
         c=4;
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
@@ -57,7 +57,7 @@ public class SettingsController {
         Fproperties = fileChooser.showOpenDialog(HelloController.settingsStage);
     }
     @FXML
-    public void onJSONButtonClick() {
+    public void onJSONButtonClick(){
         c=5;
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
@@ -66,13 +66,8 @@ public class SettingsController {
         Fjson = fileChooser.showOpenDialog(HelloController.settingsStage);
     }
     @FXML
-    public void onSaveButtonClick() {
+    public void onSaveButtonClick(){
         // Zamknięcie wszystkich executorów z listy
-        /*for(int i=0; i<HelloApplication.iloscSamochodow.get();i++) {
-            Samochod sa = HelloApplication.listaSamochodow.get().get(i);
-            ImageView IVsa = sa.imageView;
-            IVsa.setLayoutX(100*i); IVsa.setLayoutY(100*i);
-        }*/
             for (ExecutorService exec : HelloController.executors) {
                 exec.shutdownNow();
                 try {
@@ -109,36 +104,181 @@ public class SettingsController {
                     throw new RuntimeException(e);
                 }
                 doc.getDocumentElement().normalize();
+                Losuje.usun(HelloApplication.iloscZasobow,HelloApplication.iloscLiniiProdukcyjnych,HelloApplication.iloscMagazynowNaZasoby,HelloApplication.listaZasobow,HelloApplication.listaMagazynowNaZasoby,HelloApplication.listaLiniiProdukcyjnych,HelloApplication.root);
+                /*
                 NodeList listaOsob = doc.getElementsByTagName("osoba");
-
                 for (int i = 0; i < listaOsob.getLength(); i++) {
                     Node node = listaOsob.item(i);
-
                     if (node.getNodeType() == Node.ELEMENT_NODE) {
                         Element osoba = (Element) node;
                         String imie = osoba.getElementsByTagName("imie").item(0).getTextContent();
                         String wiek = osoba.getElementsByTagName("wiek").item(0).getTextContent();
-
                         System.out.println(imie + " ma " + wiek + " lat.");
+                    }
+                }
+                */
+                NodeList Dane = doc.getElementsByTagName("Dane");
+                for (int i = 0; i < 1; i++) {
+                    Node node = Dane.item(i);
+                    int iZ=0;
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        Element Dane1 = (Element) node;
+                        iZ = Integer.parseInt(Dane1.getElementsByTagName("IleZasobow").item(0).getTextContent());
+                    }
+                    HelloApplication.iloscZasobow.set(iZ);
+                    HelloApplication.listaZasobow = new AtomicReferenceArray<>(HelloApplication.iloscZasobow.get());
+                }
+                for (int i = 0; i < HelloApplication.iloscZasobow.get(); i++) {
+                    Node node = Dane.item(0);
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        Element Dane1 = (Element) node;
+                        int zasob = Integer.parseInt(Dane1.getElementsByTagName("Zasob").item(i).getTextContent());
+                        HelloApplication.listaZasobow.set(i,Losuje.NazwyZasobow[zasob]);
+                        int IleMNZ = Integer.parseInt(Dane1.getElementsByTagName("IleMNZ").item(0).getTextContent());HelloApplication.iloscMagazynowNaZasoby.set(IleMNZ);
+                        int IleLP = Integer.parseInt(Dane1.getElementsByTagName("IleLP").item(0).getTextContent());HelloApplication.iloscLiniiProdukcyjnych.set(IleLP);
+                        int IleMW = Integer.parseInt(Dane1.getElementsByTagName("IleMW").item(0).getTextContent());HelloApplication.iloscMagazynowWyjsciowych.set(IleMW);
+                        int IleS = Integer.parseInt(Dane1.getElementsByTagName("IleS").item(0).getTextContent());HelloApplication.iloscSamochodow.set(IleS);
+                    }
+                }
+                System.out.print("Ilość magazynów na zasoby= "+HelloApplication.iloscMagazynowNaZasoby+"\n");
+                NodeList listaMNZ = doc.getElementsByTagName("MNZ");
+                for (int i = 0; i < listaMNZ.getLength(); i++) {
+                    Node node = listaMNZ.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        Element MNZ = (Element) node;
+                        int id = Integer.parseInt(MNZ.getElementsByTagName("id").item(0).getTextContent());
+                        int zasob = Integer.parseInt(MNZ.getElementsByTagName("zasob").item(0).getTextContent());
+                        int pk = Integer.parseInt(MNZ.getElementsByTagName("pk").item(0).getTextContent());
+                        int il = Integer.parseInt(MNZ.getElementsByTagName("il").item(0).getTextContent());
+                        int poj = Integer.parseInt(MNZ.getElementsByTagName("poj").item(0).getTextContent());
+                        System.out.println("XML:MNZ id:"+id+", zasob:"+zasob + ", pk:"+pk + ", il:"+il + ", poj:"+poj);
+                        Losuje.zmienRozmiarTablicy(HelloApplication.listaMagazynowNaZasoby, HelloApplication.iloscMagazynowNaZasoby.get());
+                        HelloApplication.listaMagazynowNaZasoby.get().set(id-1, new MagazynNaZasoby(id, Losuje.NazwyZasobow[zasob], pk, il, poj, HelloApplication.root.get()));
+                    }
+                }
+                NodeList listaLP = doc.getElementsByTagName("LP");
+                for (int i = 0; i < listaLP.getLength(); i++) {
+                    Node node = listaLP.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        Element LP = (Element) node;
+                        int id = Integer.parseInt(LP.getElementsByTagName("id").item(0).getTextContent());
+                        int zasob = Integer.parseInt(LP.getElementsByTagName("zasob").item(0).getTextContent());
+                        boolean pk = Boolean.parseBoolean(LP.getElementsByTagName("pk").item(0).getTextContent());
+                        System.out.println("XML:LP id:"+id+", zasob:"+zasob + ", pk:"+pk);
+                        Losuje.zmienRozmiarTablicy(HelloApplication.listaLiniiProdukcyjnych, HelloApplication.iloscLiniiProdukcyjnych.get());
+                        HelloApplication.listaLiniiProdukcyjnych.get().set(id - 1, new LiniaProdukcyjna(id, Losuje.NazwyZasobow[zasob], pk, HelloApplication.root.get()));
+                    }
+                }
+                NodeList listaMW = doc.getElementsByTagName("MW");
+                for (int i = 0; i < listaMW.getLength(); i++) {
+                    Node node = listaMW.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        Element MW = (Element) node;
+                        int id = Integer.parseInt(MW.getElementsByTagName("id").item(0).getTextContent());
+                        int il = Integer.parseInt(MW.getElementsByTagName("il").item(0).getTextContent());
+                        int pk = Integer.parseInt(MW.getElementsByTagName("pk").item(0).getTextContent());
+                        int poj = Integer.parseInt(MW.getElementsByTagName("poj").item(0).getTextContent());
+                        System.out.println("XML:MW id:"+id+", il:"+il + ", pk:"+pk+ ", poj:"+poj);
+                        HelloApplication.MW1=new MagazynWyjsciowy(id,il,pk,poj,HelloApplication.root.get());
+                        Losuje.zmienRozmiarTablicy(HelloApplication.listaMagazynowWyjsciowych, HelloApplication.iloscMagazynowWyjsciowych.get());
+                        HelloApplication.listaMagazynowWyjsciowych.get().set(0, HelloApplication.MW1);
+                    }
+                }
+                NodeList listaS = doc.getElementsByTagName("S");
+                for (int i = 0; i < listaS.getLength(); i++) {
+                    Node node = listaS.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        Element S = (Element) node;
+                        int id = Integer.parseInt(S.getElementsByTagName("id").item(0).getTextContent());
+                        boolean prac = Boolean.parseBoolean(S.getElementsByTagName("prac").item(0).getTextContent());
+                        int o = Integer.parseInt(S.getElementsByTagName("o").item(0).getTextContent());
+                        int x; if(o==1)x=75;else if(o==2)x=155;else if(o==3)x=770;else if(o==4)x=860;else x=0;
+                        int y; if(o==1||o==2)y=HelloApplication.listaMagazynowNaZasoby.get().get(0).y;else if(o==3||o==4)y=HelloApplication.listaMagazynowWyjsciowych.get().get(0).y;else y=0;
+                        int il = Integer.parseInt(S.getElementsByTagName("il").item(0).getTextContent());
+                        boolean pl = Boolean.parseBoolean(S.getElementsByTagName("pl").item(0).getTextContent());
+                        System.out.println("JSON:S id:"+id+", prac:"+prac + ", o:"+o+ ", il:"+il+" pl:"+pl);
+                        Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodow, HelloApplication.iloscSamochodow.get());
+                        HelloApplication.listaSamochodow.get().set(id-1,new Samochod(id,prac,o,il,null,HelloApplication.root.get(),x,y,pl));
+                        if(o==1){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowA,1);HelloApplication.listaSamochodowA.get().set(0,(1));}
+                        if(o==2){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowB,1);HelloApplication.listaSamochodowB.get().set(0,(2));}
+                        if(o==3){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowC,1);HelloApplication.listaSamochodowC.get().set(0,(3));}
+                        if(o==4){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowD,1);HelloApplication.listaSamochodowD.get().set(0,(4));}
                     }
                 }
             }
         }
         if(c==4){//properties
             if (Fproperties != null) {
-                //System.out.println(Fproperties.getAbsolutePath());
                 try {
                     Properties props = new Properties();
                     FileInputStream fis = new FileInputStream(Fproperties);
                     props.load(fis);
-
-                    for (int i = 1; i <= 2; i++) {
+                    /*for (int i = 1; i <= 2; i++) {
                         String imie = props.getProperty("osoba" + i + ".imie");
                         String wiek = props.getProperty("osoba" + i + ".wiek");
-
                         System.out.println(imie + " ma " + wiek + " lat.");
+                    }*/
+                    Losuje.usun(HelloApplication.iloscZasobow,HelloApplication.iloscLiniiProdukcyjnych,HelloApplication.iloscMagazynowNaZasoby,HelloApplication.listaZasobow,HelloApplication.listaMagazynowNaZasoby,HelloApplication.listaLiniiProdukcyjnych,HelloApplication.root);
+                    int iZ=0;
+                    for (int i = 0; i <= 1; i++){
+                        iZ=Integer.parseInt(props.getProperty("dane.IleZasobow"));
                     }
-
+                    HelloApplication.iloscZasobow.set(iZ);
+                    HelloApplication.listaZasobow = new AtomicReferenceArray<>(HelloApplication.iloscZasobow.get());
+                    int z=0;
+                    for (int i = 0; i < iZ; i++) {
+                        int zasob = Integer.parseInt(props.getProperty("dane.Zasob"));
+                        HelloApplication.listaZasobow.set(i,Losuje.NazwyZasobow[zasob]);
+                        int IleMNZ = Integer.parseInt(props.getProperty("dane.IleMNZ"));HelloApplication.iloscMagazynowNaZasoby.set(IleMNZ);
+                        int IleLP = Integer.parseInt(props.getProperty("dane.IleLP"));HelloApplication.iloscLiniiProdukcyjnych.set(IleLP);
+                        int IleMW = Integer.parseInt(props.getProperty("dane.IleMW"));HelloApplication.iloscMagazynowWyjsciowych.set(IleMW);
+                        int IleS = Integer.parseInt(props.getProperty("dane.IleS"));HelloApplication.iloscSamochodow.set(IleS);
+                    }
+                    System.out.print("Properties:Ilość magazynów na zasoby= "+HelloApplication.iloscMagazynowNaZasoby+"\n");
+                    for (int i = 1; i <= HelloApplication.iloscMagazynowNaZasoby.get(); i++) {
+                        int id = Integer.parseInt(props.getProperty("MNZ"+i+".id"));
+                        int zasob = Integer.parseInt(props.getProperty("MNZ"+i+".zasob"));
+                        int pk = Integer.parseInt(props.getProperty("MNZ"+i+".pk"));
+                        int il = Integer.parseInt(props.getProperty("MNZ"+i+".il"));
+                        int poj = Integer.parseInt(props.getProperty("MNZ"+i+".poj"));
+                        System.out.println("Properties:MNZ id:"+id+", zasob:"+zasob + ", pk:"+pk + ", il:"+il + ", poj:"+poj);
+                        Losuje.zmienRozmiarTablicy(HelloApplication.listaMagazynowNaZasoby, HelloApplication.iloscMagazynowNaZasoby.get());
+                        HelloApplication.listaMagazynowNaZasoby.get().set(id-1, new MagazynNaZasoby(id, Losuje.NazwyZasobow[zasob], pk, il, poj, HelloApplication.root.get()));
+                    }
+                    for (int i = 1; i <= HelloApplication.iloscLiniiProdukcyjnych.get(); i++) {
+                        int id = Integer.parseInt(props.getProperty("LP"+i+".id"));
+                        int zasob = Integer.parseInt(props.getProperty("LP"+i+".zasob"));
+                        boolean pk = Boolean.parseBoolean(props.getProperty("LP"+i+".pk"));
+                        System.out.println("Properties:LP id:"+id+", zasob:"+zasob + ", pk:"+pk);
+                        Losuje.zmienRozmiarTablicy(HelloApplication.listaLiniiProdukcyjnych, HelloApplication.iloscLiniiProdukcyjnych.get());
+                        HelloApplication.listaLiniiProdukcyjnych.get().set(id - 1, new LiniaProdukcyjna(id, Losuje.NazwyZasobow[zasob], pk, HelloApplication.root.get()));
+                    }
+                    for (int i = 1; i <= HelloApplication.iloscMagazynowWyjsciowych.get(); i++) {
+                        int id = Integer.parseInt(props.getProperty("MW"+i+".id"));
+                        int il = Integer.parseInt(props.getProperty("MW"+i+".il"));
+                        int pk = Integer.parseInt(props.getProperty("MW"+i+".pk"));
+                        int poj = Integer.parseInt(props.getProperty("MW"+i+".poj"));
+                        System.out.println("Properties:MW id:"+id+", il:"+il + ", pk:"+pk+ ", poj:"+poj);
+                        HelloApplication.MW1=new MagazynWyjsciowy(id,il,pk,poj,HelloApplication.root.get());
+                        Losuje.zmienRozmiarTablicy(HelloApplication.listaMagazynowWyjsciowych, HelloApplication.iloscMagazynowWyjsciowych.get());
+                        HelloApplication.listaMagazynowWyjsciowych.get().set(0, HelloApplication.MW1);
+                    }
+                    for (int i = 1; i <= HelloApplication.iloscSamochodow.get(); i++) {
+                        int id = Integer.parseInt(props.getProperty("S"+i+".id"));
+                        boolean prac = Boolean.parseBoolean(props.getProperty("S"+i+".prac"));
+                        int o = Integer.parseInt(props.getProperty("S"+i+".o"));
+                        int x; if(o==1)x=75;else if(o==2)x=155;else if(o==3)x=770;else if(o==4)x=860;else x=0;
+                        int y; if(o==1||o==2)y=HelloApplication.listaMagazynowNaZasoby.get().get(0).y;else if(o==3||o==4)y=HelloApplication.listaMagazynowWyjsciowych.get().get(0).y;else y=0;
+                        int il = Integer.parseInt(props.getProperty("S"+i+".il"));
+                        boolean pl = Boolean.parseBoolean(props.getProperty("S"+i+".pl"));
+                        System.out.println("Properties:S id:"+id+", prac:"+prac + ", o:"+o+ ", il:"+il+" pl:"+pl);
+                        Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodow, HelloApplication.iloscSamochodow.get());
+                        HelloApplication.listaSamochodow.get().set(id-1,new Samochod(id,prac,o,il,null,HelloApplication.root.get(),x,y,pl));
+                        if(o==1){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowA,1);HelloApplication.listaSamochodowA.get().set(0,(1));}
+                        if(o==2){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowB,1);HelloApplication.listaSamochodowB.get().set(0,(2));}
+                        if(o==3){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowC,1);HelloApplication.listaSamochodowC.get().set(0,(3));}
+                        if(o==4){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowD,1);HelloApplication.listaSamochodowD.get().set(0,(4));}
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -153,11 +293,71 @@ public class SettingsController {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-
-                for (JsonNode osoba : root1.get("osoby")) {
-                    String imie = osoba.get("imie").asText();
-                    int wiek = osoba.get("wiek").asInt();
-                    System.out.println(imie + " ma " + wiek + " lat.");
+                Losuje.usun(HelloApplication.iloscZasobow,HelloApplication.iloscLiniiProdukcyjnych,HelloApplication.iloscMagazynowNaZasoby,HelloApplication.listaZasobow,HelloApplication.listaMagazynowNaZasoby,HelloApplication.listaLiniiProdukcyjnych,HelloApplication.root);
+                int iZ=0;
+                for (JsonNode Dane : root1.get("Dane")) {
+                    iZ = Dane.get("IleZasobow").asInt();
+                }
+                HelloApplication.iloscZasobow.set(iZ);
+                HelloApplication.listaZasobow = new AtomicReferenceArray<>(HelloApplication.iloscZasobow.get());
+                /*
+                for(int i=0;i<HelloApplication.iloscZasobow.get();i++) {
+                    HelloApplication.listaZasobow.set(i,Losuje.NazwyZasobow[i]);
+                }*/
+                int z=0;
+                for (JsonNode Z : root1.get("Dane")) {
+                    int zasob = Z.get("Zasob").asInt();//6,3,...
+                    System.out.println("JSON:Dane: zasob:"+zasob);
+                    HelloApplication.listaZasobow.set(z,Losuje.NazwyZasobow[zasob]);
+                    int IleMNZ = Z.get("IleMNZ").asInt();HelloApplication.iloscMagazynowNaZasoby.set(IleMNZ);
+                    int IleLP = Z.get("IleLP").asInt();HelloApplication.iloscLiniiProdukcyjnych.set(IleLP);
+                    int IleMW = Z.get("IleMW").asInt();HelloApplication.iloscMagazynowWyjsciowych.set(IleMW);
+                    int IleS = Z.get("IleS").asInt();HelloApplication.iloscSamochodow.set(IleS);
+                }
+                System.out.print("Ilość magazynów na zasoby= "+HelloApplication.iloscMagazynowNaZasoby+"\n");
+                for (JsonNode MNZ : root1.get("MNZ")) {
+                    int id = MNZ.get("id").asInt();//1,2,3,...
+                    int zasob = MNZ.get("zasob").asInt();//0,1,2,..9,10
+                    int pk = MNZ.get("pk").asInt();
+                    int il = MNZ.get("il").asInt();
+                    int poj = MNZ.get("poj").asInt();
+                    System.out.println("JSON:MNZ id:"+id+", zasob:"+zasob + ", pk:"+pk + ", il:"+il + ", poj:"+poj);
+                    Losuje.zmienRozmiarTablicy(HelloApplication.listaMagazynowNaZasoby, HelloApplication.iloscMagazynowNaZasoby.get());
+                    HelloApplication.listaMagazynowNaZasoby.get().set(id-1, new MagazynNaZasoby(id, Losuje.NazwyZasobow[zasob], pk, il, poj, HelloApplication.root.get()));
+                }
+                for (JsonNode LP : root1.get("LP")) {
+                    int id = LP.get("id").asInt();
+                    int zasob = LP.get("zasob").asInt();
+                    boolean pk = LP.get("pk").asBoolean();
+                    System.out.println("JSON:LP id:" + id + ", zasob:" + zasob + ", pk:" + pk);
+                    Losuje.zmienRozmiarTablicy(HelloApplication.listaLiniiProdukcyjnych, HelloApplication.iloscLiniiProdukcyjnych.get());
+                    HelloApplication.listaLiniiProdukcyjnych.get().set(id - 1, new LiniaProdukcyjna(id, Losuje.NazwyZasobow[zasob], pk, HelloApplication.root.get()));
+                    }
+                for (JsonNode MW : root1.get("MW")) {
+                    int id = MW.get("id").asInt();
+                    int il = MW.get("il").asInt();
+                    int pk = MW.get("pk").asInt();
+                    int poj = MW.get("poj").asInt();
+                    System.out.println("JSON:MW id:"+id+", il:"+il + ", pk:"+pk+ ", poj:"+poj);
+                    HelloApplication.MW1=new MagazynWyjsciowy(id,il,pk,poj,HelloApplication.root.get());
+                    Losuje.zmienRozmiarTablicy(HelloApplication.listaMagazynowWyjsciowych, HelloApplication.iloscMagazynowWyjsciowych.get());
+                    HelloApplication.listaMagazynowWyjsciowych.get().set(0, HelloApplication.MW1);
+                }
+                for (JsonNode S : root1.get("S")) {
+                    int id = S.get("id").asInt();
+                    boolean prac = S.get("prac").asBoolean();
+                    int o = S.get("o").asInt();//1,2,3,4
+                    int x; if(o==1)x=75;else if(o==2)x=155;else if(o==3)x=770;else if(o==4)x=860;else x=0;
+                    int y; if(o==1||o==2)y=HelloApplication.listaMagazynowNaZasoby.get().get(0).y;else if(o==3||o==4)y=HelloApplication.listaMagazynowWyjsciowych.get().get(0).y;else y=0;
+                    int il = S.get("il").asInt();
+                    boolean pl = S.get("pl").asBoolean();
+                    System.out.println("JSON:S id:"+id+", prac:"+prac + ", o:"+o+ ", il:"+il+" pl:"+pl);
+                    Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodow, HelloApplication.iloscSamochodow.get());
+                    HelloApplication.listaSamochodow.get().set(id-1,new Samochod(id,prac,o,il,null,HelloApplication.root.get(),x,y,pl));
+                    if(o==1){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowA,1);HelloApplication.listaSamochodowA.get().set(0,(1));}
+                    if(o==2){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowB,1);HelloApplication.listaSamochodowB.get().set(0,(2));}
+                    if(o==3){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowC,1);HelloApplication.listaSamochodowC.get().set(0,(3));}
+                    if(o==4){Losuje.zmienRozmiarTablicy(HelloApplication.listaSamochodowD,1);HelloApplication.listaSamochodowD.get().set(0,(4));}
                 }
             }
         }
