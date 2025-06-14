@@ -2,7 +2,9 @@ package org.example.pw_projekt_gui;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import java.util.concurrent.atomic.AtomicReferenceArray;
+
+import java.util.Random;
+
 public class LiniaProdukcyjna implements Runnable{
     int id;
     String zasob;
@@ -16,27 +18,14 @@ public class LiniaProdukcyjna implements Runnable{
     ImageView imageView;
     ImageView imageView1;
     ImageView imageView2;
+    private static volatile boolean[] chce = new boolean[2];
+    private static volatile int czyjaKolej = 0; //ustala kolejność
     LiniaProdukcyjna(int id, String zasob, boolean produkt, Pane root) {
         this.id = id;
         this.zasob = zasob;
         this.produkt=produkt;
         this.root = root;
-        //System.out.println("Linia Produkcyjna id:"+id+" używa zasobu "+zasob);
         y=(id*70+(id-1)*20)-50;
-        /*if(id==1){//chcę by pierwsza linia produkcyjna (LP) od razu tworzyła samochód,jeżdżący od LP do magazynu wyjściowego (MW)
-            //System.out.println("IloscSamochodowPRZED:"+Main.iloscSamochodow.get());
-            Losuje.powiekszTablice(HelloApplication.listaSamochodow, HelloApplication.iloscSamochodow.get()+1);
-            for(int i=HelloApplication.iloscSamochodow.get();i<HelloApplication.iloscSamochodow.get()+1;i++)
-            {
-                //System.out.println("i:"+i);
-                HelloApplication.listaSamochodow.get().set(i,new Samochod((i+1),false,3,0,null,root,x,y,false));
-                //Powiększe tablicę listaSamochodowC
-                Losuje.powiekszTablice(HelloApplication.listaSamochodowC,1);
-                HelloApplication.listaSamochodowC.get().set(0,(1));
-            }
-            HelloApplication.iloscSamochodow.set(HelloApplication.iloscSamochodow.get()+1);
-            //System.out.println("IloscSamochodowPO:"+Main.iloscSamochodow.get());
-        }*/
         image = new Image(getClass().getResource("/org/example/pw_projekt_gui/lp.jpg").toExternalForm());
         imageView = new ImageView(image);
         imageView.setFitWidth(250);
@@ -57,32 +46,34 @@ public class LiniaProdukcyjna implements Runnable{
         imageView2.setOpacity(0.5);
         root.getChildren().add(imageView2);
         imageView2.setLayoutX(x+245);imageView2.setLayoutY(y-55);
+        String d=" ";
+        if(!pracuje)d=" nie ";
+        System.out.print("Jestem linią produkcyjną na zasób "+zasob+" o id="+id+",obecnie"+d+"pracuję\n");
     }
     @Override
     public void run(){
-        while(running){//!Thread.currentThread().isInterrupted()){
+        while(running){
             if(!pracuje&&!produkt){
-                // UWAGA ! TUTAJ JEST BŁĄD KTÓRY POWODUJE BRAK KOŃCA WĄTKÓW
-                System.out.println("LP"+id+": potrzebuję zasobu "+zasob+".");
+                //System.out.println("LP"+id+": potrzebuję zasobu "+zasob+".");
                 for (int i = 0; i < HelloApplication.listaSamochodowB.get().length(); i++){
                     int idSamochodu = HelloApplication.listaSamochodowB.get().get(i);
                     Samochod samochod = HelloApplication.listaSamochodow.get().get(idSamochodu-1);
-                    LiniaProdukcyjna LP = HelloApplication.listaLiniiProdukcyjnych.get().get(id-1);//zmieniłem
-                    System.out.println("LP"+LP.id+" sięga po S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar);//+", LP: "+LP.id+", MNZ: "+MNZ.id);
-                    if(!samochod.pracuje&&samochod.obszar==2&&HelloApplication.semaLP.tryAcquire()){
-                        System.out.println("LP"+LP.id+" wywołuję S>"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+", LP: "+LP.id);
+                    LiniaProdukcyjna LP = HelloApplication.listaLiniiProdukcyjnych.get().get(id-1);
+                    //System.out.println("LP"+LP.id+" sięga po S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar);
+                    if(!samochod.pracuje&&!produkt&&samochod.obszar==2&&HelloApplication.semaLP.tryAcquire()){
+                        System.out.println("LP"+LP.id+" wywołuje S>"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+", LP: "+LP.id);
                         for (int j = 0; j < HelloApplication.listaMagazynowNaZasoby.get().length(); j++) {
                             MagazynNaZasoby MNZ = HelloApplication.listaMagazynowNaZasoby.get().get(j);
-                            System.out.print("MNZZasob:"+MNZ.rzecz+", LPZasob:"+LP.zasob);
-                            //MNZ.set(j, Main.listaMagazynowNaZasoby.get().get(id));
-                            if(MNZ.rzecz.equals(LP.zasob)){
-                                if(!samochod.pracuje&&samochod.obszar==2&&HelloApplication.semaLP1.tryAcquire()){
+                            System.out.print("MNZZasob:"+MNZ.rzecz+"MNZIlosc:"+MNZ.ilosc+", LPZasob:"+LP.zasob);
+                            if((MNZ.rzecz.equals(LP.zasob))&&(MNZ.ilosc>0)){
+                                if(!samochod.pracuje&&!produkt&&samochod.obszar==2&&HelloApplication.semaLP1.tryAcquire()){
                                     System.out.println("LP"+LP.id+" wywołuję S%"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+", LP: "+LP.id+", MNZ: "+MNZ.id);
                                     samochod.sekcja2(zasob,samochod,MNZ,LP);
                                     LP.imageView1.setOpacity(0.5);
                                     LP.imageView2.setOpacity(1);
                                     System.out.println("LP"+LP.id+" otrzymał od S$"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+" i teraz pracuje:"+LP.pracuje);
                                     pracuje=true;
+                                    HelloApplication.semaLP.release();HelloApplication.semaLP1.release();
                                     break;
                                 }
                             }
@@ -101,31 +92,71 @@ public class LiniaProdukcyjna implements Runnable{
                 System.out.println("LP"+id+": kończę pracę!");
                 pracuje=false;produkt=true;
             }
-            else if(!pracuje&&produkt)
-            {
-                // UWAGA ! TUTAJ JEST BŁĄD KTÓRY POWODUJE BRAK KOŃCA WĄTKÓW
+            else if(!pracuje&&produkt){
                 System.out.println("LP"+id+": posiadam produkt!");
-                for (int i = 0; i < HelloApplication.listaSamochodowC.get().length(); i++){
-                    int idSamochodu = HelloApplication.listaSamochodowC.get().get(i);
-                    Samochod samochod = HelloApplication.listaSamochodow.get().get(idSamochodu-1);
-                    LiniaProdukcyjna LP = HelloApplication.listaLiniiProdukcyjnych.get().get(id-1);//zmieniłem
-                    System.out.println("LP"+LP.id+" sięga po S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar);//+", LP: "+LP.id+", MNZ: "+MNZ.id);
-                    System.out.println("LP"+LP.id+" wywołuję S#"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+", LP: "+LP.id);
-                    if(!samochod.pracuje&&samochod.obszar==3&&HelloApplication.semaMW.tryAcquire()){
-                        MagazynWyjsciowy MW = HelloApplication.MW1;
-                        System.out.println("LP"+LP.id+" wywołuję S@"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+", LP: "+LP.id+", MW: "+MW.id);
-                        samochod.sekcja3(samochod,LP,MW);
-                        System.out.println("LP"+LP.id+" otrzymał od S!"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+" i teraz pracuje:"+LP.pracuje);
+                if(HelloApplication.iloscLiniiProdukcyjnych.get()<=2){
+                    //Algorytm Dekkera
+                    //System.out.println("LP-Dekker");
+                    //System.out.println("MW"+id+": pojemnosc: "+pojemnosc+" ilosc: "+ ilosc+" z ilością potrzebną do pakietu: "+iloscNaPakiet+", ilość pakietów: "+pakiety);
+                    Random los = new Random();
+                    try {
+                        Thread.sleep(los.nextInt(10) + 1);
+                    } catch (InterruptedException e) {
                         break;
                     }
+                    int drugi = 1 - (id);
+                    chce[(id)] = true;
+                    while (chce[drugi]) {
+                        if (czyjaKolej == drugi) {
+                            chce[(id+1)] = false;
+                            while (czyjaKolej == drugi) {
+                                Thread.yield();
+                            }
+                            chce[(id+1)] = true;
+                        }
+                    }
+                    // Sekcja krytyczna
+                    MagazynWyjsciowy MW = HelloApplication.listaMagazynowWyjsciowych.get().get(0);
+                    for (int i = 0; i < HelloApplication.listaSamochodowC.get().length(); i++) {
+                        int idSamochodu = HelloApplication.listaSamochodowC.get().get(i)-1;
+                        Samochod samochod = HelloApplication.listaSamochodow.get().get(idSamochodu);
+                        System.out.println("MW"+id+" sięga po S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar);
+                        LiniaProdukcyjna LP = HelloApplication.listaLiniiProdukcyjnych.get().get(id-1);
+                        if(!samochod.pracuje&&samochod.obszar==3&&HelloApplication.semaMW.tryAcquire()){
+                            System.out.println("MW"+id+" wywołuję S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar);
+                            samochod.sekcja3(samochod,LP,MW);
+                            produkt=false;pracuje=false;
+                            break;
+                        }
+                        System.out.println("MW"+id+" otrzymał od S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+" i ma teraz:"+MW.ilosc+" przy pojemnosci:"+MW.pojemnosc);
+                    }
+                    // Koniec sekcji krytycznej
+                    czyjaKolej = drugi;
+                    chce[(id)] = false;
                 }
-                produkt=false;pracuje=false;
+                else{
+                    for (int i = 0; i < HelloApplication.listaSamochodowC.get().length(); i++){
+                        int idSamochodu = HelloApplication.listaSamochodowC.get().get(i);
+                        Samochod samochod = HelloApplication.listaSamochodow.get().get(idSamochodu-1);
+                        LiniaProdukcyjna LP = HelloApplication.listaLiniiProdukcyjnych.get().get(id-1);
+                        System.out.println("LP"+LP.id+" sięga po S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar);
+                        System.out.println("LP"+LP.id+" wywołuję S#"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+", LP: "+LP.id);
+                        if(!samochod.pracuje&&samochod.obszar==3&&HelloApplication.semaMW.tryAcquire()){
+                            MagazynWyjsciowy MW = HelloApplication.MW1;
+                            System.out.println("LP"+LP.id+" wywołuję S@"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+", LP: "+LP.id+", MW: "+MW.id);
+                            samochod.sekcja3(samochod,LP,MW);
+                            produkt=false;pracuje=false;
+                            System.out.println("LP"+LP.id+" otrzymał od S!"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+" i teraz pracuje:"+LP.pracuje);
+                            break;
+                        }
+                    }
+                }
             }
-            System.out.println("LP"+id+" działa w pętli!");
+            System.out.println("LP" + id + " działa w pętli!");
             try {
-                Thread.sleep(1000);  // śpij 1 sekundę
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
-                break;  // przerwij pętlę jeśli ktoś wywoła .interrupt()
+                break;
             }
         }
         System.out.println("Koniec LP"+id+".");

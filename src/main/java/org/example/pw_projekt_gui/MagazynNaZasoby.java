@@ -1,11 +1,9 @@
 package org.example.pw_projekt_gui;
 import javafx.scene.image.Image;
+import javafx.scene.text.Text;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import java.util.Random;
-import javafx.scene.Parent;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 public class MagazynNaZasoby extends Magazyn{
     private Pane root;
     public String rzecz;
@@ -19,6 +17,9 @@ public class MagazynNaZasoby extends Magazyn{
     ImageView imageView;
     Image image;
     private volatile boolean running = true;
+    Text napisIl;
+    Text napisPoj;
+    Text napisPk;
     public MagazynNaZasoby(int id, String rzecz, int poziomKrytyczny, int ilosc, int pojemnosc, Pane root) {
         super(id, ilosc, pojemnosc);
         this.rzecz=rzecz;
@@ -32,12 +33,23 @@ public class MagazynNaZasoby extends Magazyn{
         imageView.setPreserveRatio(true);
         root.getChildren().add(imageView);
         imageView.setLayoutX(x);imageView.setLayoutY(y);
-        //System.out.println("IloscSamochodowpO:"+HelloApplication.iloscSamochodow.get());
+        Text napisIl = new Text();napisIl.setText("il:"+ilosc);
+        napisIl.setX(x);napisIl.setY(y-10);
+        root.getChildren().add(napisIl);
+        this.napisIl=napisIl;
+        Text napisPoj = new Text();napisPoj.setText("Poj:"+pojemnosc);
+        napisPoj.setX(x+20);napisPoj.setY(y-10);
+        root.getChildren().add(napisPoj);
+        this.napisPoj=napisPoj;
+        Text napisPk = new Text();napisPk.setText("PK:"+poziomKrytyczny);
+        napisPk.setX(x+55);napisPk.setY(y-10);
+        root.getChildren().add(napisPk);
+        this.napisPk=napisPk;
         System.out.print("Jestem magazynem na zasób "+rzecz+" o id="+id+", pk="+poziomKrytyczny+", mam="+ilosc+", max="+pojemnosc+"\n");
     }
     @Override
     public void run(){
-        while(running){//!Thread.currentThread().isInterrupted()){
+        while(running){
             if(HelloApplication.iloscMagazynowNaZasoby.get()<=2){
                 if(ilosc<poziomKrytyczny){
                     //Algorytm Petersona
@@ -46,13 +58,13 @@ public class MagazynNaZasoby extends Magazyn{
                     try {
                         Thread.sleep(los.nextInt(10) + 1);
                     } catch (InterruptedException e) {
-                        break;//e.printStackTrace();
+                        break;
                     }
                     int drugi = 1 - (id-1);
                     chce[(id-1)] = true;
                     czyjaKolej = drugi;
                     while (chce[drugi] && czyjaKolej == drugi) {
-                        Thread.yield(); // oczekiwanie
+                        Thread.yield();
                     }
                     // Sekcja krytyczna
                     for (int i = 0; i < HelloApplication.listaSamochodowA.get().length(); i++) {
@@ -63,19 +75,11 @@ public class MagazynNaZasoby extends Magazyn{
                         if(!samochod.pracuje&&samochod.obszar==1&&HelloApplication.semaMNZ.tryAcquire()){
                             System.out.println("MNZ"+id+" wywołuję S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar);
                             samochod.sekcja1(potrzeba,rzecz,samochod,MNZ);
+                            napisIl.setText("il:"+ilosc);
                             break;
                         }
                         System.out.println("MNZ"+id+" otrzymał od S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+" i ma teraz:"+ilosc+" przy pojemnosci:"+pojemnosc);
                     }
-                    /*
-                    try {
-                        Thread.sleep(los.nextInt(10) + 1);
-                    } catch (InterruptedException e) {
-                        //e.printStackTrace();
-                        break;
-                        //Main.MW1.interrupt();//Main.MW1.join();
-                    }
-                    ilosc+=potrzeba;*/
                     // Wyjście z sekcji krytycznej
                     chce[(id-1)] = false;
                     potrzeba = pojemnosc - ilosc;
@@ -83,7 +87,7 @@ public class MagazynNaZasoby extends Magazyn{
                 }
             }else{ //Semafor
                 if(ilosc<poziomKrytyczny) {
-                    potrzeba = pojemnosc - ilosc;//określenie potrzebnej ilości
+                    potrzeba = pojemnosc - ilosc;
                     System.out.println("MNZ" + id + ": pojemnosc: " + pojemnosc + " ilosc: " + ilosc + " potrzebuję " + potrzeba + " zasobu " + rzecz + ".");
                     for(int i = 0; i < HelloApplication.listaSamochodowA.get().length(); i++) {
                         int idSamochodu = HelloApplication.listaSamochodowA.get().get(i)-1;
@@ -93,28 +97,11 @@ public class MagazynNaZasoby extends Magazyn{
                         if(!samochod.pracuje&&samochod.obszar==1&&HelloApplication.semaMNZ.tryAcquire()){
                             System.out.println("MNZ"+id+" wywołuję S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar);
                             samochod.sekcja1(potrzeba,rzecz,samochod,MNZ);
+                            napisIl.setText("il:"+ilosc);
                             break;
                         }
                         System.out.println("MNZ"+id+" otrzymał od S"+samochod.id+" pracuje:"+samochod.pracuje+" obszar:"+samochod.obszar+" i ma teraz:"+ilosc+" przy pojemnosci:"+pojemnosc);
                     }
-                    /*
-                    for (int i = 0; i < Main.listaSamochodowB.get().length(); i++) {
-                        int idSamochodu = Main.listaSamochodowB.get().get(i);
-                        Samochod samochod = Main.listaSamochodow.get().get(idSamochodu);
-                        System.out.println("lSB" + idSamochodu + " pracuje: " + samochod.pracuje);
-                    }*/
-                    /*
-                    try {
-                        Main.semaMNZ.acquire();
-                        Thread.sleep(1000);
-                        ilosc += potrzeba;
-                        Main.semaMNZ.release();
-                    } catch (InterruptedException e) {
-                        break;//e.printStackTrace();
-                    }
-                    potrzeba = pojemnosc - ilosc;
-                    */
-                    //System.out.println("MNZ" + id + ": pojemnosc: " + pojemnosc + " ilosc: " + ilosc + " NIE potrzebuję " + potrzeba + " zasobu " + rzecz + ".");
                 }
             }
             System.out.println("MNZ"+id+" działa w pętli!");
@@ -132,5 +119,6 @@ public class MagazynNaZasoby extends Magazyn{
     public void remove(){
         root.getChildren().remove(imageView);
         image=null;
+        root.getChildren().remove(napisIl);root.getChildren().remove(napisPoj);root.getChildren().remove(napisPk);
     }
 }

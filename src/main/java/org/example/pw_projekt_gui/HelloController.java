@@ -254,7 +254,6 @@ public class HelloController {
     public void onExitButtonClick(){
         if(st==false)
         {
-            // Zamknięcie wszystkich executorów z listy
             for (ExecutorService exec : executors) {
                 exec.shutdownNow();
                 try {
@@ -266,7 +265,6 @@ public class HelloController {
                     Thread.currentThread().interrupt();
                 }
             }
-            // Można wyczyścić listę, jeśli chcesz uruchomić później jeszcze raz
             executors.clear();
             for (ExecutorService exec : executors) {
                 exec.shutdownNow();
