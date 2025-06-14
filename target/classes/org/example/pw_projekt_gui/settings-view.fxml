@@ -2,12 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" prefHeight="320.0" prefWidth="900.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pw_projekt_gui.SettingsController">
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="900.0" spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pw_projekt_gui.SettingsController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
@@ -17,63 +20,430 @@
          <Button onAction="#onDefaultButtonClick" text="Przywróć domyślne" />
       </children>
    </HBox>
-   <HBox prefHeight="64.0" prefWidth="1240.0" VBox.vgrow="ALWAYS">
+   <HBox prefHeight="82.0" prefWidth="860.0" VBox.vgrow="ALWAYS">
       <children>
-         <VBox prefHeight="103.0" prefWidth="146.0">
+         <VBox prefHeight="502.0" prefWidth="137.0">
             <children>
                <HBox prefHeight="7.0" prefWidth="146.0">
                   <children>
                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość zasobów: " />
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                     <Text fx:id="ZasobyOut" strokeType="OUTSIDE" strokeWidth="0.0" text="2" />
                   </children>
                </HBox>
-               <Slider max="10.0" min="1.0" value="2.0" />
+               <Slider fx:id="ZasobySlider" majorTickUnit="1.0" max="8.0" min="1.0" showTickLabels="true" showTickMarks="true" value="2.0" />
+               <HBox fx:id="Z1" prefHeight="100.0" prefWidth="139.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zasób 1:" />
+                     <ChoiceBox fx:id="Z1CB" prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="Z2" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zasób 2:" />
+                     <ChoiceBox fx:id="Z2CB" prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="Z3" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zasób 3:" />
+                     <ChoiceBox fx:id="Z3CB" prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="Z4" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zasób 4:" />
+                     <ChoiceBox fx:id="Z4CB" prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="Z5" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zasób 5:" />
+                     <ChoiceBox fx:id="Z5CB" prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="Z6" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zasób 6:" />
+                     <ChoiceBox fx:id="Z6CB" prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="Z7" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zasób 7:" />
+                     <ChoiceBox fx:id="Z7CB" prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="Z8" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zasób 8:" />
+                     <ChoiceBox fx:id="Z8CB" prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
             </children>
          </VBox>
-         <VBox prefHeight="48.0" prefWidth="176.0">
+         <VBox prefHeight="335.0" prefWidth="220.0">
             <children>
                <HBox prefHeight="16.0" prefWidth="153.0">
                   <children>
                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość magazynów na zasoby: " />
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                     <Text fx:id="MNZOut" strokeType="OUTSIDE" strokeWidth="0.0" text="2" />
                   </children>
                </HBox>
-               <Slider max="10.0" min="1.0" prefHeight="14.0" prefWidth="167.0" value="2.0" />
+               <Slider fx:id="MNZSlider" majorTickUnit="1.0" max="8.0" min="1.0" prefHeight="14.0" prefWidth="174.0" showTickLabels="true" showTickMarks="true" value="3.0" />
+               <HBox fx:id="M1" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="35.0" prefWidth="220.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magazyn 1:" />
+                                 <ComboBox fx:id="M1CB" prefWidth="150.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość:" />
+                                 <Spinner />
+                              </children>
+                           </HBox>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PK:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poj:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                              </children>
+                           </HBox>
+                        </children>
+                        <padding>
+                           <Insets bottom="5.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
+               <HBox fx:id="M2" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="35.0" prefWidth="220.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magazyn 2:" />
+                                 <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość:" />
+                                 <Spinner />
+                              </children>
+                           </HBox>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PK:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poj:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                              </children>
+                           </HBox>
+                        </children>
+                        <padding>
+                           <Insets bottom="5.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
+               <HBox fx:id="M3" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="35.0" prefWidth="220.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magazyn 3:" />
+                                 <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość:" />
+                                 <Spinner />
+                              </children>
+                           </HBox>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PK:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poj:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                              </children>
+                           </HBox>
+                        </children>
+                        <padding>
+                           <Insets bottom="5.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
+               <HBox fx:id="M4" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="35.0" prefWidth="220.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magazyn 4:" />
+                                 <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość:" />
+                                 <Spinner />
+                              </children>
+                           </HBox>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PK:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poj:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                              </children>
+                           </HBox>
+                        </children>
+                        <padding>
+                           <Insets bottom="5.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
+               <HBox fx:id="M5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="35.0" prefWidth="220.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magazyn 5:" />
+                                 <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość:" />
+                                 <Spinner />
+                              </children>
+                           </HBox>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PK:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poj:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                              </children>
+                           </HBox>
+                        </children>
+                        <padding>
+                           <Insets bottom="5.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
+               <HBox fx:id="M6" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="35.0" prefWidth="220.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magazyn 6:" />
+                                 <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość:" />
+                                 <Spinner />
+                              </children>
+                           </HBox>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PK:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poj:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                              </children>
+                           </HBox>
+                        </children>
+                        <padding>
+                           <Insets bottom="5.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
+               <HBox fx:id="M7" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="35.0" prefWidth="220.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magazyn 7:" />
+                                 <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość:" />
+                                 <Spinner />
+                              </children>
+                           </HBox>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PK:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poj:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                              </children>
+                           </HBox>
+                        </children>
+                        <padding>
+                           <Insets bottom="5.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
+               <HBox fx:id="M8" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox prefHeight="35.0" prefWidth="220.0">
+                        <children>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magazyn 8:" />
+                                 <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość:" />
+                                 <Spinner />
+                              </children>
+                           </HBox>
+                           <HBox prefHeight="100.0" prefWidth="200.0">
+                              <children>
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="PK:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Poj:" />
+                                 <Spinner prefHeight="26.0" prefWidth="74.0" />
+                              </children>
+                           </HBox>
+                        </children>
+                        <padding>
+                           <Insets bottom="5.0" />
+                        </padding>
+                     </VBox>
+                  </children>
+               </HBox>
             </children>
          </VBox>
-         <VBox prefHeight="48.0" prefWidth="184.0">
+         <VBox prefHeight="335.0" prefWidth="204.0">
             <children>
                <HBox prefHeight="11.0" prefWidth="153.0">
                   <children>
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość magazynów na zasoby: " />
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość linii produkcyjnych:" />
+                     <Text fx:id="LPOut" strokeType="OUTSIDE" strokeWidth="0.0" text="3" />
                   </children>
                </HBox>
-               <Slider max="10.0" min="1.0" value="2.0" />
+               <Slider fx:id="LPSlider" majorTickUnit="1.0" max="8.0" min="1.0" showTickLabels="true" showTickMarks="true" value="3.0" />
+               <HBox fx:id="L1" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linia 1:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="L2" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linia 2:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="L3" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linia 3:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="L4" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="217.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linia 4:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="L5" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linia 5:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="L6" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linia 6:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="L7" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linia 7:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="L8" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Linia 8:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
             </children>
          </VBox>
-         <VBox prefHeight="48.0" prefWidth="192.0">
+         <VBox prefHeight="502.0" prefWidth="199.0">
             <children>
                <HBox prefHeight="6.0" prefWidth="165.0">
                   <children>
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość magazynów na zasoby: " />
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość samochodów: " />
+                     <Text fx:id="SOut" strokeType="OUTSIDE" strokeWidth="0.0" text="4" />
                   </children>
                </HBox>
-               <Slider max="3.0" min="1.0" value="1.0" />
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" />
-            </children>
-         </VBox>
-         <VBox prefHeight="48.0" prefWidth="136.0">
-            <children>
-               <HBox prefHeight="6.0" prefWidth="165.0">
+               <Slider fx:id="SSlider" majorTickUnit="1.0" max="11.0" min="1.0" showTickLabels="true" showTickMarks="true" value="4.0" />
+               <HBox fx:id="S1" prefHeight="100.0" prefWidth="200.0">
                   <children>
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość magazynów wyjściowych: " />
-                     <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 1:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Obszar:" />
+                     <Spinner />
                   </children>
                </HBox>
-               <Slider max="3.0" min="1.0" value="1.0" />
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" />
+               <HBox fx:id="S2" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 2:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S3" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 3:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S4" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 4:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S5" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 5:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S6" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 6:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S7" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 7:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S8" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 8:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S9" disable="true" opacity="0.5" prefHeight="67.0" prefWidth="167.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 9:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S10" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 10:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
+               <HBox fx:id="S11" disable="true" opacity="0.5" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Samochód 11:" />
+                     <ChoiceBox prefHeight="26.0" prefWidth="101.0" />
+                  </children>
+               </HBox>
             </children>
          </VBox>
       </children>
